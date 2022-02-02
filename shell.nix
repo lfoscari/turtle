@@ -12,7 +12,6 @@ let svg_turtle = python3.pkgs.buildPythonPackage rec {
 
 let pythonPackages = with pkgs.python39Packages; [
   tkinter
-  mpmath
   svg_turtle
   svgwrite
   tqdm

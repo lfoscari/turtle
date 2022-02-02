@@ -1,22 +1,22 @@
 import svgwrite
 from svg_turtle import SvgTurtle
-from mpmath import mp
 from tqdm import tqdm
 
-DIGITS = 1000
 BASE = 10
 UNIT = 360 / BASE
 
-def digits(n):
-	return [int(x, BASE) for x in mp.nstr(n, DIGITS, min_fixed=-mp.inf).split(".")[1]]
+def digit_gen(p, q):
+	while True:
+		p *= 10
+		yield p // q
+		p %= q
 
-def plot_angles(angles):
-	for angle in angles:
+def plot_angles(angle, precision):
+	for _ in range(precision * 20):
 		t.forward(10)
-		t.left(UNIT * angle)
+		t.left(UNIT * next(angle))
 
-mp.dps = DIGITS
-t = SvgTurtle(500, 500)
+t = SvgTurtle(1000, 1000)
 
 primes = \
    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
@@ -41,7 +41,14 @@ primes = \
 	1153, 1163, 1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223]
 
 if __name__ == "__main__":
+	s = t.getscreen()
+	
 	for p in tqdm(primes):
-		plot_angles(digits(mp.fraction(1, p)))
+		digits = digit_gen(1, p)
+		next(digits) # ignore floor
+
+		plot_angles(digits, p - 1)
 		t.save_as(f"primes/{p}.svg")
-	print("done")
+		
+		s.delay()
+		s.reset()
