@@ -7,9 +7,13 @@ UNIT = 360 / BASE
 
 def digit_gen(p, q):
 	while True:
-		p *= 10
+		p *= BASE
 		yield p // q
 		p %= q
+
+def dd(p, n):
+	g = digit_gen(1, p)
+	return "".join(str(next(g)) for _ in range(n))
 
 def plot_angles(angle, precision):
 	for _ in range(precision * 20):
